@@ -10,7 +10,8 @@ services:
       - .env
 
   backend:
-    build: .
+    build: &backend
+      context: .
     entrypoint: /app/run_server.sh
     restart: always
     volumes:
@@ -28,7 +29,7 @@ services:
       - "6379:6379"
 
   celery:
-    image: catstyle1101/tasktracker_backend:latest
+    build: *backend
     entrypoint: /app/run_worker.sh
     volumes:
       - static_volume:/app/static/

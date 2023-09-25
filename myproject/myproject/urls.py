@@ -6,8 +6,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('upload/', include('uploader.urls'), name='video'),
-    path('', include('video.urls'), name='uploader'),
+    path('upload/', include('uploader.urls'), name='uploader'),
+    path('', include('video.urls'), name='video'),
 ]
 
 if settings.DEBUG:

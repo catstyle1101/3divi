@@ -5,4 +5,4 @@ do
     echo "Waiting for server volume..."
 done
 
-celery -A backend worker --loglevel=info --concurrency 1 -E
+celery -A myproject worker --loglevel=info --concurrency 1 -E

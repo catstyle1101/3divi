@@ -9,4 +9,4 @@ done
 
 
 python manage.py collectstatic --noinput;
-gunicorn -w 2 -b 0:8000 backend.wsgi;
+gunicorn -w 2 -b 0:8000 myproject.wsgi;

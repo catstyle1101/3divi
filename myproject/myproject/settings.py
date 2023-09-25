@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-c)a^=8d18i$luxt9w0z49h3jf1)b1axr=bxmgtk7t4a1v#@e%e')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -55,9 +55,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3'),
+        'USER': os.getenv('POSTGRES_USER', 'user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+        'HOST': os.getenv('DB_HOST', '0.0.0.0'),
+        'PORT': os.getenv('DB_PORT', '8000'),
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -92,3 +96,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 VIDEO_FILETYPES = ('mp4', )
 
 FACE_COMPARE_TOLERANCE = 0.65
+
+CELERY_BROKER_URL = 'redis://redis:6379/1'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/2'

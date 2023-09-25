@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 
+from face_finder.tasks import find_faces
 from .forms import VideoUploadForm
 from video.models import Video
 
@@ -12,7 +13,7 @@ def upload_video(request):
             for video in uploaded_videos:
                 obj = Video.objects.create(video=video)
                 obj.save()
-                # TODO celery start task
+                find_faces.delay(obj)
             return redirect('video:videos_list')
     else:
         form = VideoUploadForm()

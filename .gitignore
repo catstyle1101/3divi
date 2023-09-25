@@ -7,3 +7,5 @@ migrations/
 .env
 *.sqlite3
 *.avi
+venv/
+.DS_Store

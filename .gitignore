@@ -1,0 +1,8 @@
+.vscode/
+env/
+*.mp4
+media/
+__pycache__/
+migrations/
+.env
+*.sqlite3

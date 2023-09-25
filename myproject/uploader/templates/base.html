@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Face Recognition Service{% endblock %}</title>
+  <link href="{% static "css/base.css" %}" rel="stylesheet">
+</head>
+<body>
+  <div id="header">
+    <a href="/upload", class="logo">Face recognition service</a>
+  </div>
+  <div id="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>

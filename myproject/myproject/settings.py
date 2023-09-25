@@ -19,6 +19,8 @@ INSTALLED_APPS = [
     'multiupload',
     'uploader',
     'face_counter',
+    'face_finder',
+    'video',
 ]
 
 MIDDLEWARE = [

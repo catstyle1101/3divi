@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from .forms import VideoUploadForm
-from .models import Video
+from video.models import Video
 
 
 def upload_video(request):
@@ -13,19 +13,7 @@ def upload_video(request):
                 obj = Video.objects.create(video=video)
                 obj.save()
                 # TODO celery start task
-            return redirect('uploader:upload_video')
+            return redirect('video:videos_list')
     else:
         form = VideoUploadForm()
     return render(request, 'video_upload/upload_video.html', {'form': form})
-
-
-def video_list(request):
-    videos = Video.objects.all()
-    return render(
-        request,
-        'videos/list.html',
-        {
-            'videos': videos,
-            'Video': Video,
-        }
-    )

@@ -1,5 +1,6 @@
-{% extends "base.html" %}
+{% extends "video/base.html" %}
 {% block content %}
+  <a href="{% url 'uploader:upload_video' %}">Upload videos</a>
   <table>
     <tr>
       <th>Название</th>

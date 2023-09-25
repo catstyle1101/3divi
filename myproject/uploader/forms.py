@@ -1,9 +1,9 @@
 from django import forms
 from django.conf import settings
 
-from multiupload.fields import MultiFileField, MultiMediaField
+from multiupload.fields import MultiMediaField
 
-from .models import Video
+from video.models import Video
 
 
 class VideoUploadForm(forms.ModelForm):

@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from video.mixins import UpdateMixin
 
-class Video(models.Model):
+
+class Video(models.Model, UpdateMixin):
     class Status(models.TextChoices):
         IN_PROGRESS = 'in_progress', _('IN PROGRESS')
         PAUSED = 'paused', _('PAUSED')
@@ -16,6 +18,10 @@ class Video(models.Model):
         choices=Status.choices,
         default=Status.IN_PROGRESS,
         max_length=20
+    )
+    count_faces = models.SmallIntegerField(
+        'Количество уникальных лиц на видео',
+        default=0,
     )
 
     def __str__(self):

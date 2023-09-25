@@ -90,3 +90,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 VIDEO_FILETYPES = ('mp4', )
+
+FACE_COMPARE_TOLERANCE = 0.65

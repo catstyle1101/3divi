@@ -1,19 +1,32 @@
+import logging
+
+from celery import shared_task
 import cv2
+from django.conf import settings
 import face_recognition
 import numpy
-from celery import shared_task
-from django.conf import settings
 
 from video.models import Video
 
 
-@shared_task
-def find_faces(video: Video) -> None:
+@shared_task()
+def find_faces(pk: int) -> None:
     """
     Get instance of Video model. Search unique faces and update instance.
     """
-    input_movie = cv2.VideoCapture(video.video.path)
-    video_length = int(input_movie.get(cv2.CAP_PROP_FRAME_COUNT))
+    max_retry = 20
+    video = Video.objects.get(pk=pk)
+    video.update(status=Video.Status.IN_PROGRESS)
+    video_length = retries = 0
+    while video_length == 0 and retries < max_retry:
+        input_movie = cv2.VideoCapture(video.video.path)
+        video_length = int(input_movie.get(cv2.CAP_PROP_FRAME_COUNT))
+        retries += 1
+    if video_length == 0:
+        logging.error('Video cannot be analyze')
+        return
+
+    logging.info(f'Video {video.video.path} length is {video_length}')
 
     face_locations = []
     face_encodings = []
@@ -56,9 +69,18 @@ def find_faces(video: Video) -> None:
         percent = int(frame_number//(video_length/100))
         if percent > progress_percent:
             progress_percent = percent
+            logging.info(f'{video.video} processing {progress_percent}%')
             video.update(
                 progress=progress_percent, count_faces=count_unique_faces)
 
     input_movie.release()
     cv2.destroyAllWindows()
-    video.update(status=Video.Status.FINISHED, progress=100)
+    video.update(status=Video.Status.FINISHED, progress=progress_percent)
+    logging.info(f'{video.video} processing finished')
+
+
+@shared_task
+def error_handler(request, exc, traceback):
+    logging.info(
+        'Task {0} raised exception: {1!r}\n{2!r}'.format(
+            request.id, exc, traceback))

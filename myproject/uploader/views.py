@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from face_finder.tasks import error_handler, find_faces
+from face_finder.tasks import find_faces
 from .forms import VideoUploadForm
 from video.models import Video
 

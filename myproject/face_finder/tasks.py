@@ -1,6 +1,6 @@
 import logging
 
-from celery import shared_task
+from celery import shared_task, current_task
 import cv2
 from django.conf import settings
 import face_recognition
@@ -16,6 +16,7 @@ def find_faces(self, pk: int) -> None:
     """
     max_retry = 20
     video = Video.objects.get(pk=pk)
+    video.update(task_id=current_task.request.id)
     video_length = retries = 0
     while video_length == 0 and retries < max_retry:
         input_movie = cv2.VideoCapture(video.video.path)
@@ -77,10 +78,3 @@ def find_faces(self, pk: int) -> None:
     cv2.destroyAllWindows()
     video.update(status=Video.Status.FINISHED, progress=progress_percent)
     logging.info(f'{video.video} processing finished')
-
-
-@shared_task
-def error_handler(request, exc, traceback):
-    logging.info(
-        'Task {0} raised exception: {1!r}\n{2!r}'.format(
-            request.id, exc, traceback))

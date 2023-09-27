@@ -35,6 +35,9 @@ def find_faces(self, pk: int) -> None:
     known_faces = []
     progress_percent = 0
     while True:
+        video = Video.objects.get(pk=pk)
+        if video.status == Video.Status.CANCELED:
+            return
         video.update(status=Video.Status.IN_PROGRESS)
         ret, frame = input_movie.read()
         frame_number += 1

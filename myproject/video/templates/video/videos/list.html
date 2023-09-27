@@ -12,8 +12,8 @@
     <div class="item">
       <tr>
         <td>{{ video }}</td>
-        <td>{{ video.get_status_display }}
-        <td>{{ video.progress }}%</td>
+        <td>{{ video.get_status_display }}</td>
+        <td>{{ video.progress }}%{% if video.task_id and not video.status in stopped_statuses %} <a href="{% url 'video:revoke_task' task_id=video.task_id%}">STOP</a>{% endif %}</td>
         <td>{{ video.count_faces }}</td>
       </tr>
     </div>

@@ -8,7 +8,11 @@ from video.models import Video
 
 class VideoUploadForm(forms.ModelForm):
     video = MultiMediaField(
-        min_num=1, max_num=5, max_file_size=1024*1024*100, media_type='video')
+        min_num=1,
+        max_num=settings.MAX_VIDEOS_TO_UPLOAD,
+        max_file_size=settings.MAX_VIDEO_SIZE,
+        media_type='video',
+    )
 
     class Meta:
         model = Video

@@ -1,11 +1,11 @@
 .vscode/
 env/
-*.mp4
+media/*.mp4
 media/
 __pycache__/
 migrations/
 .env
 *.sqlite3
-*.avi
+media/*.avi
 venv/
 .DS_Store

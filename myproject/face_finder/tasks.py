@@ -16,7 +16,8 @@ def find_faces(self, pk: int) -> None:
     Get instance of Video model. Search unique faces and update instance.
     """
     video = Video.objects.get(pk=pk)
-    video.update(task_id=current_task.request.id)
+    video.update(
+        status=Video.Status.IN_PROGRESS, task_id=current_task.request.id)
     input_movie = cv2.VideoCapture(video.video.path)
     video_length = int(input_movie.get(cv2.CAP_PROP_FRAME_COUNT))
     face_locations = []
@@ -27,11 +28,11 @@ def find_faces(self, pk: int) -> None:
     progress_percent = 0
     while True:
         video = Video.objects.get(pk=pk)
-        if video.status == Video.Status.CANCELED:
+        if video.is_cancelled:
             return
-        while video.status == Video.Status.PAUSED and frame_number > 1:
-            time.sleep(1)
-        video.update(status=Video.Status.IN_PROGRESS)
+        if video.is_paused:
+            time.sleep(10)
+            continue
         ret, frame = input_movie.read()
         frame_number += 1
         if not ret:

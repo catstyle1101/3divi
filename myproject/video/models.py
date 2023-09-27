@@ -16,7 +16,7 @@ class Video(models.Model, UpdateMixin):
     status = models.CharField(
         'Статус',
         choices=Status.choices,
-        default=Status.IN_PROGRESS,
+        default=Status.PAUSED,
         max_length=20
     )
     count_faces = models.SmallIntegerField(

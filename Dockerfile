@@ -1,7 +1,7 @@
 FROM python:3.11-slim-buster
 
-RUN apt-get update &&\
-    apt-get install -y libpq-dev gcc cmake build-essential pkg-config ffmpeg libsm6 libxext6
+RUN apt-get update 
+RUN apt-get install libpq-dev gcc cmake build-essential pkg-config ffmpeg libsm6 libxext6 -y
 WORKDIR /app
 RUN python -m pip install --upgrade pip
 RUN pip install face-recognition==1.3.0

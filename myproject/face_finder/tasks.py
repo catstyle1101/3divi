@@ -9,14 +9,13 @@ import numpy
 from video.models import Video
 
 
-@shared_task()
-def find_faces(pk: int) -> None:
+@shared_task(bind=True)
+def find_faces(self, pk: int) -> None:
     """
     Get instance of Video model. Search unique faces and update instance.
     """
     max_retry = 20
     video = Video.objects.get(pk=pk)
-    video.update(status=Video.Status.IN_PROGRESS)
     video_length = retries = 0
     while video_length == 0 and retries < max_retry:
         input_movie = cv2.VideoCapture(video.video.path)
@@ -35,6 +34,7 @@ def find_faces(pk: int) -> None:
     known_faces = []
     progress_percent = 0
     while True:
+        video.update(status=Video.Status.IN_PROGRESS)
         ret, frame = input_movie.read()
         frame_number += 1
         if not ret:

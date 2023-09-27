@@ -1,4 +1,5 @@
 import logging
+import time
 
 from celery import shared_task, current_task
 import cv2
@@ -14,20 +15,10 @@ def find_faces(self, pk: int) -> None:
     """
     Get instance of Video model. Search unique faces and update instance.
     """
-    max_retry = 20
     video = Video.objects.get(pk=pk)
     video.update(task_id=current_task.request.id)
-    video_length = retries = 0
-    while video_length == 0 and retries < max_retry:
-        input_movie = cv2.VideoCapture(video.video.path)
-        video_length = int(input_movie.get(cv2.CAP_PROP_FRAME_COUNT))
-        retries += 1
-    if video_length == 0:
-        logging.error('Video cannot be analyze')
-        return
-
-    logging.info(f'Video {video.video.path} length is {video_length}')
-
+    input_movie = cv2.VideoCapture(video.video.path)
+    video_length = int(input_movie.get(cv2.CAP_PROP_FRAME_COUNT))
     face_locations = []
     face_encodings = []
     frame_number = 0
@@ -38,6 +29,8 @@ def find_faces(self, pk: int) -> None:
         video = Video.objects.get(pk=pk)
         if video.status == Video.Status.CANCELED:
             return
+        while video.status == Video.Status.PAUSED and frame_number > 1:
+            time.sleep(1)
         video.update(status=Video.Status.IN_PROGRESS)
         ret, frame = input_movie.read()
         frame_number += 1

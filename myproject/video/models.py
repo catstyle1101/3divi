@@ -25,5 +25,13 @@ class Video(models.Model, UpdateMixin):
     )
     task_id = models.CharField('Task ID', max_length=200, blank=True)
 
+    @property
+    def is_cancelled(self) -> bool:
+        return self.status == self.Status.CANCELED
+
+    @property
+    def is_paused(self) -> bool:
+        return self.status == self.Status.PAUSED
+
     def __str__(self):
         return self.video.name.split('/')[-1]

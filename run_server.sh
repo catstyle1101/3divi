@@ -1,7 +1,6 @@
 #!/bin/sh
 
-sleep 5
-
+python manage.py makemigrations
 until python manage.py migrate
 do
     echo "Waiting for db to be ready..."

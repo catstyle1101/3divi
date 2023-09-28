@@ -23,7 +23,8 @@ class Video(models.Model, UpdateMixin):
         'Количество уникальных лиц на видео',
         default=0,
     )
-    task_id = models.CharField('Task ID', max_length=200, blank=True)
+    task_id = models.CharField(
+        'Task ID', max_length=200, blank=True, null=True)
 
     @property
     def is_cancelled(self) -> bool:

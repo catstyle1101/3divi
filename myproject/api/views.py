@@ -23,9 +23,13 @@ class VideoListView(ListModelMixin, CreateModelMixin, GenericViewSet):
         -----
         """
         video = Video.objects.filter(pk=kwargs.get('pk'))
-        if video.exists():
+        if video.exists() and video.status != Video.Status.PAUSED:
             video[0].update(status=Video.Status.PAUSED)
-        return Response({'paused': True})
+            return Response({'paused': True})
+        return Response(
+            {'error': 'This video cannot be paused'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @action(methods=['GET'], detail=True)
     def unpause(self, request, *args, **kwargs):
@@ -35,9 +39,13 @@ class VideoListView(ListModelMixin, CreateModelMixin, GenericViewSet):
         -----
         """
         video = Video.objects.filter(pk=kwargs.get('pk'))
-        if video.exists():
+        if video.exists() and video[0].status == Video.Status.PAUSED:
             video[0].update(status=Video.Status.IN_PROGRESS)
-        return Response({'paused': False})
+            return Response({'unpaused': True})
+        return Response(
+            {'error': 'this video cannot be unpaused'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @action(methods=['GET'], detail=True)
     def revoke(self, request, *args, **kwargs):
@@ -47,9 +55,13 @@ class VideoListView(ListModelMixin, CreateModelMixin, GenericViewSet):
         -----
         """
         video = Video.objects.filter(pk=kwargs.get('pk'))
-        if video.exists():
+        if video.exists() and video[0].status != Video.Status.CANCELED:
             video[0].update(status=Video.Status.CANCELED)
-        return Response({'revoked': True})
+            return Response({'revoked': True})
+        return Response(
+            {'error': 'this video cannot be revoked'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     def create(self, request, *args, **kwargs):
         """

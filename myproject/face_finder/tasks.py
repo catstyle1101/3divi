@@ -13,7 +13,7 @@ from video.models import Video
 @shared_task(bind=True)
 def find_faces(self, pk: int) -> None:
     """
-    Get instance of Video model. Search unique faces and update instance.
+    Get pk of Video model. Search unique faces and update instance.
     """
     video = Video.objects.get(pk=pk)
     video.update(
@@ -29,8 +29,10 @@ def find_faces(self, pk: int) -> None:
     while True:
         video = Video.objects.get(pk=pk)
         if video.is_cancelled:
+            logging.info('video face recognition cancelled')
             return
         if video.is_paused:
+            logging.info('video face recoginition paused')
             time.sleep(10)
             continue
         ret, frame = input_movie.read()

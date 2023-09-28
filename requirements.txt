@@ -9,3 +9,4 @@ redis
 flower
 djangorestframework==3.14.0
 drf-yasg==1.21.7
+gevent

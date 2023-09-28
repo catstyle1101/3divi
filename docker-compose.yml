@@ -32,12 +32,14 @@ services:
 
   celery:
     build: *backend
-    command: celery -A myproject worker -P threads --without-gossip
+    command: celery -A myproject worker -P threads --without-gossip --loglevel=INFO
     env_file:
       - .env
     depends_on:
       - backend
       - redis
+    volumes:
+      - media_volume:/app/media/
 
   flower:
     build: *backend

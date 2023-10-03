@@ -47,7 +47,7 @@ def find_faces(self, pk: int) -> None:
             rgb_frame, face_locations)
 
         for face_encoding in face_encodings:
-            if frame_number == 1:
+            if not known_faces:
                 known_faces.append(face_encoding)
                 count_unique_faces += 1
             else:
@@ -56,14 +56,7 @@ def find_faces(self, pk: int) -> None:
                     face_encoding,
                     tolerance=settings.FACE_COMPARE_TOLERANCE,
                 )
-                y = False
-                for i in match:
-                    if i:
-                        y = True
-                        break
-                if y:
-                    continue
-                else:
+                if not any(match):
                     known_faces.append(face_encoding)
                     count_unique_faces += 1
         percent = int(frame_number//(video_length/100))

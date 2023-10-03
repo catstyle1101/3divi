@@ -1,6 +1,6 @@
 #!/bin/sh
 
-python manage.py makemigrations
+python manage.py makemigrations video
 until python manage.py migrate
 do
     echo "Waiting for db to be ready..."

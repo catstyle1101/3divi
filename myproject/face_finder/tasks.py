@@ -75,5 +75,5 @@ def find_faces(self, pk: int) -> None:
 
     input_movie.release()
     cv2.destroyAllWindows()
-    video.update(status=Video.Status.FINISHED, progress=progress_percent)
+    video.update(status=Video.Status.FINISHED, progress=100)
     logging.info(f'{video.video} processing finished')
